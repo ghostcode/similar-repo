@@ -18,10 +18,15 @@ async function getRecommendations(repoFullName) {
   const repoData = await repoRes.json()
   const topics = repoData.topics || []
   const mainTopic = topics[0]
-  if (!mainTopic) return []
 
-  // 2. 按主 topic 搜索同类型热门仓库，排除当前仓库
-  const q = encodeURIComponent(`topic:${mainTopic}`)
+  // 策略改进：
+  // 1. 若有 topics，取第一个 topic 搜索
+  // 2. 若无 topics，退化为按仓库名搜索（类似 GitHub 搜索 echarts-stat 的效果）
+  const query = mainTopic ? `topic:${mainTopic}` : repoData.name
+  if (!query) return []
+
+  // 2. 搜索同类型热门仓库，排除当前仓库
+  const q = encodeURIComponent(query)
   const searchRes = await fetch(
     `${GITHUB_API}/search/repositories?q=${q}&sort=stars&order=desc&per_page=${PER_PAGE + 2}`,
     {
@@ -34,6 +39,7 @@ async function getRecommendations(repoFullName) {
   const items = (data.items || [])
     .filter(item => (item.full_name || '').toLowerCase() !== currentLower)
     .slice(0, PER_PAGE)
+  console.log('😀 >>> items', items)
   return items
 }
 

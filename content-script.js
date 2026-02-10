@@ -1,4 +1,4 @@
-;(function () {
+; (function () {
   'use strict'
 
   const REPO_PAGE_PATH_REG = /^\/[^/]+\/[^/]+\/?$/
@@ -113,6 +113,7 @@
     const repoFullName = getRepoFullName()
     getRecommendationsFromBackground(repoFullName)
       .then(repos => {
+        console.log('😀 >>> repos', repos)
         loadingEl.remove()
         const panel = repos.length
           ? renderPanel(repos)
