@@ -24,7 +24,7 @@
   }
 
   function findBorderGridAboutMargin() {
-    return document.querySelector('.BorderGrid.about-margin')
+    return document.querySelector('.BorderGrid')
   }
 
   function createCard(item) {
